@@ -1,35 +1,34 @@
 # Codex Project Instructions
 
-This repository includes project-local Codex agents and skills converted from the existing `.github` assistant configuration.
+This repository is SeeUsedToken: a CLI that reads local AI assistant logs and counts token usage without storing conversation content.
 
 ## Agent Usage
 
-Use the narrowest agent that matches the task:
+Use global Codex agents for general work. Prefer:
 
-- `researcher`: map relevant files, dependencies, tests, and implementation patterns before changes.
-- `planner`: create small implementation plans for multi-step work.
-- `implementer`: make focused code changes and run targeted validation.
-- `frontend-engineer`: handle React, TypeScript, CSS, accessibility, and browser-facing UI work.
-- `browser-tester`: verify local web app flows, screenshots, console logs, accessibility, and responsive behavior.
-- `debugger`: diagnose failing tests, stack traces, runtime errors, and regressions before fixes.
-- `reviewer`: review diffs, plans, and code for bugs, regressions, security issues, and missing tests.
-- `refactorer`: simplify code while preserving behavior.
-- `documentation-writer`: create and update project docs.
+- `code-mapper` before broad changes to log-source parsing, aggregation, or CLI behavior.
+- `debugger` for failing tests, parser regressions, and incorrect token totals.
+- `code-reviewer` for privacy-sensitive diffs and behavior changes.
+- `test-automator` when adding fixtures or parser coverage.
+- `security-auditor` for handling local files, path inputs, secrets, or privacy boundaries.
 
 ## Skill Usage
 
-Project skills live in `.agents/skills`.
-
-Useful skills for this repository:
+Project skills live in `.agents/skills`. Keep this list intentionally small:
 
 - `context-map`: build a task file map before implementation.
-- `web-coder`: web development, standards, accessibility, performance, and security.
-- `webapp-testing`: Playwright-based browser validation.
-- `polyglot-test-agent`: test generation and test coverage.
 - `security-review`: vulnerability, dependency, and secret scanning.
 - `refactor`: behavior-preserving refactoring.
-- `documentation-writer`: Diataxis-style documentation.
-- `commit-message-storyteller`: Conventional Commit messages from diffs.
+
+Use global skills for generic commit, documentation, planning, browser, OpenAI docs, and regex work.
+
+## Privacy Contract
+
+- Count tokens, never conversations.
+- Do not write prompt, response, or conversation text to CLI output, persisted records, debug logs, docs, or test snapshots.
+- Text may be read transiently only when exact token counters are unavailable and local estimation is required.
+- Persisted usage records should contain only source identity, timestamp, model, token counts, count method, and source file metadata.
+- Tests may use synthetic marker text only to verify that content does not leak into parsed records or aggregates.
 
 ## Working Style
 
@@ -37,5 +36,5 @@ Useful skills for this repository:
 - Prefer existing patterns over new abstractions.
 - Keep edits scoped to the request.
 - Add or update tests when behavior changes.
-- Run the most relevant validation command available.
+- Run the most relevant validation command available, usually `npm test`.
 - Report any validation that could not be run.
