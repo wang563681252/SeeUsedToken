@@ -1,0 +1,19 @@
+{
+  "name": "see-used-token",
+  "version": "0.1.0",
+  "description": "Privacy-preserving local AI log token counter.",
+  "type": "module",
+  "bin": {
+    "see-used-token": "./src/cli.js"
+  },
+  "scripts": {
+    "monitor": "node ./src/cli.js monitor",
+    "scan": "node ./src/cli.js scan",
+    "sources": "node ./src/cli.js sources",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT"
+}

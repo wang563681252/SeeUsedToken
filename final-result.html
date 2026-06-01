@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SeeUsedToken Token 使用报告</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f5f6f8;
+        --surface: #ffffff;
+        --ink: #17202a;
+        --muted: #5e6875;
+        --line: #d9dee7;
+        --primary: #2457a6;
+        --primary-soft: #e8f0ff;
+        --green: #167a4a;
+        --yellow: #9a6500;
+        --red: #a73535;
+        --code: #111827;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family:
+          Inter, "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+        line-height: 1.55;
+      }
+
+      header {
+        background: var(--surface);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .inner,
+      main {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .hero {
+        display: grid;
+        gap: 18px;
+        padding: 42px 0 30px;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 5vw, 4rem);
+        line-height: 1.05;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        font-size: 1.35rem;
+        margin-bottom: 16px;
+      }
+
+      h3 {
+        font-size: 1.02rem;
+      }
+
+      .lead {
+        max-width: 780px;
+        color: var(--muted);
+        font-size: 1.05rem;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        width: fit-content;
+        min-height: 28px;
+        padding: 3px 10px;
+        border: 1px solid currentColor;
+        border-radius: 999px;
+        color: var(--primary);
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      .badge.ok {
+        color: var(--green);
+      }
+
+      .badge.warn {
+        color: var(--yellow);
+      }
+
+      .badge.empty {
+        color: var(--muted);
+      }
+
+      .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 6px;
+      }
+
+      .metric,
+      section,
+      .source-card {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+      }
+
+      .metric {
+        padding: 16px;
+      }
+
+      .metric strong {
+        display: block;
+        font-size: clamp(1.55rem, 4vw, 2.05rem);
+        line-height: 1.1;
+      }
+
+      .metric span {
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      main {
+        display: grid;
+        gap: 18px;
+        padding: 22px 0 44px;
+      }
+
+      section {
+        padding: 22px;
+      }
+
+      .source-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .source-card {
+        display: grid;
+        gap: 14px;
+        padding: 18px;
+      }
+
+      .source-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .source-name {
+        display: grid;
+        gap: 4px;
+      }
+
+      .source-name span {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .token-total {
+        font-size: clamp(1.8rem, 6vw, 3rem);
+        line-height: 1;
+        font-weight: 800;
+      }
+
+      .bar {
+        height: 12px;
+        overflow: hidden;
+        background: #edf0f5;
+        border-radius: 999px;
+      }
+
+      .bar-fill {
+        display: block;
+        height: 100%;
+        background: var(--primary);
+        border-radius: inherit;
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .mini {
+        padding: 10px;
+        background: #f8fafc;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+      }
+
+      .mini strong {
+        display: block;
+      }
+
+      .mini span {
+        color: var(--muted);
+        font-size: 0.84rem;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow-wrap: anywhere;
+      }
+
+      th,
+      td {
+        padding: 11px 10px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      code {
+        font-family:
+          "Cascadia Code", Consolas, "Liberation Mono", monospace;
+      }
+
+      .command {
+        margin-top: 12px;
+        padding: 14px 16px;
+        overflow-x: auto;
+        white-space: nowrap;
+        color: #f8fafc;
+        background: var(--code);
+        border-radius: 8px;
+      }
+
+      .note {
+        background: var(--primary-soft);
+        border-color: #c8d8f6;
+        color: #173f7a;
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      @media (max-width: 900px) {
+        .metric-grid,
+        .source-grid,
+        .split {
+          grid-template-columns: 1fr;
+        }
+
+        section {
+          padding: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="inner hero">
+        <span class="badge ok">Token 检测结果</span>
+        <h1>SeeUsedToken 使用量报告</h1>
+        <p class="lead">
+          根据本地日志扫描结果生成，按来源分类展示 token 使用量。报告只包含聚合统计和元数据，
+          不展示 prompt、response 或任何 conversation 内容。
+        </p>
+        <div class="metric-grid" aria-label="总体统计">
+          <div class="metric">
+            <strong>11,541,164</strong>
+            <span>Total tokens</span>
+          </div>
+          <div class="metric">
+            <strong>11,400,868</strong>
+            <span>Input tokens</span>
+          </div>
+          <div class="metric">
+            <strong>140,296</strong>
+            <span>Output tokens</span>
+          </div>
+          <div class="metric">
+            <strong>2,866</strong>
+            <span>Counted records</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section>
+        <h2>按来源分类</h2>
+        <div class="source-grid">
+          <article class="source-card">
+            <div class="source-head">
+              <div class="source-name">
+                <h3>Codex</h3>
+                <span>sourceId: codex</span>
+              </div>
+              <span class="badge ok">已计数</span>
+            </div>
+            <div class="token-total">8,375,150</div>
+            <div class="bar" aria-label="Codex 占总 token 72.57%">
+              <span class="bar-fill" style="width: 72.57%"></span>
+            </div>
+            <div class="split">
+              <div class="mini">
+                <strong>149</strong>
+                <span>records</span>
+              </div>
+              <div class="mini">
+                <strong>8,304,981</strong>
+                <span>input</span>
+              </div>
+              <div class="mini">
+                <strong>70,169</strong>
+                <span>output</span>
+              </div>
+              <div class="mini">
+                <strong>72.57%</strong>
+                <span>share</span>
+              </div>
+            </div>
+            <p class="muted">
+              exact: 141 records / 8,355,971 tokens; estimated: 8 records / 19,179 tokens.
+            </p>
+          </article>
+
+          <article class="source-card">
+            <div class="source-head">
+              <div class="source-name">
+                <h3>VS Code Copilot</h3>
+                <span>sourceId: vscode-copilot</span>
+              </div>
+              <span class="badge warn">estimated</span>
+            </div>
+            <div class="token-total">3,166,014</div>
+            <div class="bar" aria-label="VS Code Copilot 占总 token 27.43%">
+              <span class="bar-fill" style="width: 27.43%"></span>
+            </div>
+            <div class="split">
+              <div class="mini">
+                <strong>2,717</strong>
+                <span>records</span>
+              </div>
+              <div class="mini">
+                <strong>3,095,887</strong>
+                <span>input</span>
+              </div>
+              <div class="mini">
+                <strong>70,127</strong>
+                <span>output</span>
+              </div>
+              <div class="mini">
+                <strong>27.43%</strong>
+                <span>share</span>
+              </div>
+            </div>
+            <p class="muted">
+              exact: 4 records / 743,070 tokens; estimated: 2,713 records / 2,422,944 tokens.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <h2>来源明细</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>来源</th>
+              <th>状态</th>
+              <th>Records</th>
+              <th>Total</th>
+              <th>Input</th>
+              <th>Output</th>
+              <th>Exact / Estimated</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Codex</td>
+              <td><span class="badge ok">已计数</span></td>
+              <td>149</td>
+              <td>8,375,150</td>
+              <td>8,304,981</td>
+              <td>70,169</td>
+              <td>141 exact / 8 estimated</td>
+            </tr>
+            <tr>
+              <td>VS Code Copilot</td>
+              <td><span class="badge ok">已计数</span></td>
+              <td>2,717</td>
+              <td>3,166,014</td>
+              <td>3,095,887</td>
+              <td>70,127</td>
+              <td>4 exact / 2,713 estimated</td>
+            </tr>
+            <tr>
+              <td>Claude Code</td>
+              <td><span class="badge warn">未计数</span></td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>发现 settings 文件，但没有可计数 usage schema</td>
+            </tr>
+            <tr>
+              <td>Gemini CLI</td>
+              <td><span class="badge empty">无日志</span></td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>默认路径缺失</td>
+            </tr>
+            <tr>
+              <td>GitHub Copilot CLI</td>
+              <td><span class="badge empty">无日志</span></td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>默认路径缺失</td>
+            </tr>
+            <tr>
+              <td>Hermes / Kosmos / OpenCode / OpenClaw / Pi / PM Studio</td>
+              <td><span class="badge empty">无日志</span></td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+              <td>默认路径缺失</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>按日期与来源</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>日期</th>
+              <th>来源</th>
+              <th>Records</th>
+              <th>Total tokens</th>
+              <th>说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2026-06-01</td>
+              <td>Codex</td>
+              <td>149</td>
+              <td>8,375,150</td>
+              <td>主要来自 Codex session logs，包含 exact 与少量 estimated。</td>
+            </tr>
+            <tr>
+              <td>2025-12-31 至 2026-04-12</td>
+              <td>VS Code Copilot</td>
+              <td>2,717</td>
+              <td>3,166,014</td>
+              <td>来自 VS Code Copilot 本地 workspace/chat 存储，当前均为 estimated。</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>扫描信息</h2>
+        <table>
+          <tbody>
+            <tr>
+              <th>生成时间</th>
+              <td><code>2026-06-01T13:08:04.739Z</code></td>
+            </tr>
+            <tr>
+              <th>扫描命令</th>
+              <td><code>node src/cli.js scan --summary --max-files 5000</code></td>
+            </tr>
+            <tr>
+              <th>Issue summary</th>
+              <td>7,771 total: 18 missing_path, 90 unsupported_schema, 7,663 malformed_json_line。</td>
+            </tr>
+            <tr>
+              <th>隐私边界</th>
+              <td>HTML 中只写入聚合 token 统计，不写入 prompt、response、message 或 conversation 内容。</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="command">node src/cli.js monitor --summary --interval-ms 30000</div>
+      </section>
+
+      <section class="note">
+        <h2>解释</h2>
+        <p>
+          这里的 token 总数是本地日志扫描结果，不是云端账单。Exact 表示日志中存在明确 token 字段；
+          Estimated 表示日志缺少明确 token 字段，SeeUsedToken 使用本地估算逻辑得出 token 数。
+          本次报告使用 <code>--max-files 5000</code> 重新扫描；之前 VS Code Copilot 偏少，
+          是因为报告只使用了 <code>--max-files 50</code>，而当前实际发现 154 个 VS Code Copilot 相关文件。
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
